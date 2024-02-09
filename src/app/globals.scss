@@ -2,28 +2,80 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+$text: #0C1012;
+$text-muted: #868889;
+$primary-1: #72929E;
+$primary-2: #8EA8B1;
+$primary-3: #AABEC5;
+$primary-4: #D1DBDF;
+$primary-5: #E3E9EC;
+$secondary-1: #C6ABC5;
+$secondary-2: #D1BCD1;
+$secondary-3: #DDCDDC;
+$secondary-4: #E8DDE8;
+$secondary-5: #F4EEF3;
+$background: #F6F8F9;
+$neutral-2: #C5C6C7;
+$neutral-3: #949595;
+$neutral-4: #626364;
+$neutral-5: #313232;
+
+.radix-themes {
+  --slate-1: #f6f8f9;
+  --slate-2: #e0e2e3;
+  --slate-3: #cacbcc;
+  --slate-4: #b4b5b6;
+  --slate-5: #9d9f9f;
+  --slate-6: #878889;
+  --slate-7: #717273;
+  --slate-8: #5b5c5c;
+  --slate-9: #454546;
+  --slate-10: #2f2f2f;
+  --slate-11: #191919;
+  --slate-12: #020202;
+  --teal-1: #fefefe;
+  --teal-2: #f1f4f5;
+  --teal-3: #e4eaed;
+  --teal-4: #d8e0e4;
+  --teal-5: #cbd7db;
+  --teal-6: #becdd2;
+  --teal-7: #b1c3ca;
+  --teal-8: #a5b9c1;
+  --teal-9: #98afb8;
+  --teal-10: #8ba6af;
+  --teal-11: #7f9ca7;
+  --teal-12: #72929e;
+  --ruby-1: #fefefe;
+  --ruby-2: #f9f7f9;
+  --ruby-3: #f4eff4;
+  --ruby-4: #efe7ef;
+  --ruby-5: #eae0ea;
+  --ruby-6: #e5d8e4;
+  --ruby-7: #e0d1df;
+  --ruby-8: #dbc9da;
+  --ruby-9: #d5c2d5;
+  --ruby-10: #d0bacf;
+  --ruby-11: #cbb3ca;
+  --ruby-12: #c6abc5;
 }
 
-@media (prefers-color-scheme: dark) {
+:root {
+  /* --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255; */
+}
+
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+:root body {
+  color: $text;
+  background-color: $background;
 }
 
 @layer utilities {
