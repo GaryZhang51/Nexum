@@ -1,3 +1,4 @@
+"use client";
 import {
     Avatar,
     Box,
@@ -10,10 +11,18 @@ import {
     TextFieldRoot,
     TextFieldSlot,
 } from "@radix-ui/themes";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext, useState } from "react";
 import { BsChevronDown, BsSearch } from "react-icons/bs";
+import AppContext from "./AppContext";
+import Tag from "./Tag";
 
 const Sidebar: FunctionComponent = () => {
+    const {
+        filter: { search, setSearch, tags, setTags },
+    } = useContext(AppContext);
+    const [localSearch, setLocalSearch] = useState("");
+    const [tagSearch, setTagSearch] = useState("");
+
     return (
         <Flex
             direction={"column"}
@@ -37,12 +46,42 @@ const Sidebar: FunctionComponent = () => {
                 <TextFieldSlot>
                     <BsSearch />
                 </TextFieldSlot>
-                <TextFieldInput placeholder="Search" />
+                <TextFieldInput
+                    placeholder="Search"
+                    value={localSearch}
+                    onChange={(e) => {
+                        setLocalSearch(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                        e.key === "Enter" && setSearch(localSearch);
+                    }}
+                />
             </TextFieldRoot>
-            <Box className="p-4 bg-[var(--slate-3)]">
+            <Flex
+                direction={"column"}
+                gap={"4"}
+                className="p-4 bg-[var(--slate-3)]"
+            >
                 <Heading>Filters</Heading>
-                <TextFieldInput placeholder="Add Tags" />
-            </Box>
+                <TextFieldInput
+                    placeholder="Add Tags"
+                    value={tagSearch}
+                    onChange={(e) => {
+                        setTagSearch(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            setTags([...tags, tagSearch]);
+                            setTagSearch("");
+                        }
+                    }}
+                />
+                <Flex gap={"1"} wrap={"wrap"}>
+                    {tags.map((name) => {
+                        return <Tag key={name} {...{ name }} />;
+                    })}
+                </Flex>
+            </Flex>
         </Flex>
     );
 };
