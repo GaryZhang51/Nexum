@@ -1,13 +1,10 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import WorkOS, { User } from "@workos-inc/node";
-import { SignJWT, jwtVerify } from "jose";
-import { TypedNextResponse } from "next-rest-framework";
+import { jwtVerify } from "jose";
 import { Prisma } from "@prisma/client";
-import { NextResponse } from "next/server";
 
 // Initialize the WorkOS client
-export const workos = new WorkOS(process.env.WORKOS_API_KEY);
+// export const workos = new WorkOS(process.env.WORKOS_API_KEY);
 
 export function getClientId() {
     const clientId = process.env.WORKOS_CLIENT_ID;
@@ -19,19 +16,9 @@ export function getClientId() {
     return clientId;
 }
 
-export async function getAuthorizationUrl() {
-    const redirectUri = process.env.WORKOS_REDIRECT_URI;
-
-    if (!redirectUri) {
-        throw new Error("WORKOS_REDIRECT_URI is not set");
-    }
-
-    const authorizationUrl = workos.userManagement.getAuthorizationUrl({
-        provider: "authkit",
-        clientId: getClientId(),
-        // The endpoint that WorkOS will redirect to after a user authenticates
-        redirectUri: "http://localhost:3000/callback",
-    });
+export function getAuthorizationUrl(callback?: string | null) {
+    const authorizationUrl =
+        "/callback" /* temp */ + (callback ? "?callback=" + callback : "");
 
     return authorizationUrl;
 }
@@ -58,7 +45,7 @@ export async function verifyJwtToken(token: string) {
 
 export async function getUser(): Promise<{
     isAuthenticated: boolean;
-    user?: User | null;
+    user?: Prisma.UserCreateInput | null;
 }> {
     const token = cookies().get("token")?.value;
     const verifiedToken = token && (await verifyJwtToken(token));
@@ -66,7 +53,7 @@ export async function getUser(): Promise<{
     if (verifiedToken) {
         return {
             isAuthenticated: true,
-            user: verifiedToken.user as User | null,
+            user: verifiedToken.user as Prisma.UserCreateInput | null,
         };
     }
 
