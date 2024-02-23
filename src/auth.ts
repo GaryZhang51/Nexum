@@ -1,7 +1,10 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import WorkOS, { User } from "@workos-inc/node";
-import { jwtVerify } from "jose";
+import { SignJWT, jwtVerify } from "jose";
+import { TypedNextResponse } from "next-rest-framework";
+import { Prisma } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 // Initialize the WorkOS client
 export const workos = new WorkOS(process.env.WORKOS_API_KEY);
@@ -74,3 +77,5 @@ export async function logOut() {
     cookies().delete("token");
     redirect("/");
 }
+
+export const pepper = Buffer.from(process.env.PEPPER ?? "");

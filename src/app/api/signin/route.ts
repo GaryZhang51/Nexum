@@ -1,16 +1,15 @@
 import { getJwtSecretKey, pepper } from "@/auth";
 import { prisma } from "@/server/prisma";
-import { hash } from "argon2";
+import { verify } from "argon2";
 import { SignJWT } from "jose";
 import { TypedNextResponse, route, routeOperation } from "next-rest-framework";
 import { z } from "zod";
 
 export const { POST } = route({
-    signUp: routeOperation({ method: "POST" })
+    signIn: routeOperation({ method: "POST" })
         .input({
             contentType: "application/json",
             body: z.object({
-                name: z.string(),
                 email: z.string(),
                 password: z.string(),
             }),
@@ -22,39 +21,21 @@ export const { POST } = route({
                 schema: z.null(),
             },
             {
-                status: 409,
+                status: 401,
                 contentType: "application/json",
-                schema: z.string(),
+                schema: z.null(),
             },
         ])
         .handler(async (req) => {
-            const { name, email, password } = await req.json();
+            const { email, password } = await req.json();
+            const user = await prisma.user.findUnique({ where: { email } });
 
-            if (await prisma.user.findUnique({ where: { email } })) {
-                return await TypedNextResponse.json(
-                    "A user with this email already exists",
-                    { status: 409 }
-                );
+            if (
+                user === null ||
+                !(await verify(user.passwordHash, password, { secret: pepper }))
+            ) {
+                return await TypedNextResponse.json(null, { status: 401 });
             }
-
-            const org = await prisma.org.create({
-                data: {
-                    name: `${name}'s organization`,
-                },
-            });
-
-            const passwordHash = await hash(password, {
-                secret: pepper,
-            });
-
-            const user = await prisma.user.create({
-                data: {
-                    name,
-                    email,
-                    passwordHash,
-                    orgId: org.id,
-                },
-            });
 
             const response = await TypedNextResponse.json(null, {
                 status: 200,

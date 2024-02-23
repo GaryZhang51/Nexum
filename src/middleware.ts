@@ -2,22 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthorizationUrl, verifyJwtToken } from "./auth";
 
 export async function middleware(request: NextRequest) {
-  const { cookies } = request;
-  const { value: token } = cookies.get("token") ?? { value: null };
+    const { cookies } = request;
+    const { value: token } = cookies.get("token") ?? { value: null };
 
-  const hasVerifiedToken = token && (await verifyJwtToken(token));
+    const hasVerifiedToken = token && (await verifyJwtToken(token));
 
-  // Redirect unauthenticated users to the AuthKit flow
-  if (!hasVerifiedToken) {
-    const authorizationUrl = await getAuthorizationUrl();
-    const response = NextResponse.redirect(authorizationUrl);
+    // Redirect unauthenticated users to the AuthKit flow
+    if (!hasVerifiedToken) {
+        const authorizationUrl = await getAuthorizationUrl();
+        const response = NextResponse.redirect(authorizationUrl);
 
-    response.cookies.delete("token");
+        response.cookies.delete("token");
 
-    return response;
-  }
+        return response;
+    }
 
-  return NextResponse.next();
+    return NextResponse.next();
 }
 
 // Match against the account page
