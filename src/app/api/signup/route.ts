@@ -19,7 +19,7 @@ export const { POST } = route({
             {
                 status: 200,
                 contentType: "application/json",
-                schema: z.string(),
+                schema: z.null(),
             },
             {
                 status: 409,
@@ -64,6 +64,19 @@ export const { POST } = route({
                 .setExpirationTime("1h")
                 .sign(getJwtSecretKey());
 
-            return await TypedNextResponse.json(token, { status: 200 });
+            const response = await TypedNextResponse.json(null, {
+                status: 200,
+            });
+
+            response.cookies.set({
+                name: "token",
+                value: token,
+                path: "/",
+                httpOnly: true,
+                secure: true,
+                sameSite: "lax",
+            });
+
+            return response;
         }),
 });
