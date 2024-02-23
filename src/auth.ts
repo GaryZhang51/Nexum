@@ -7,70 +7,70 @@ import { jwtVerify } from "jose";
 export const workos = new WorkOS(process.env.WORKOS_API_KEY);
 
 export function getClientId() {
-  const clientId = process.env.WORKOS_CLIENT_ID;
+    const clientId = process.env.WORKOS_CLIENT_ID;
 
-  if (!clientId) {
-    throw new Error("WORKOS_CLIENT_ID is not set");
-  }
+    if (!clientId) {
+        throw new Error("WORKOS_CLIENT_ID is not set");
+    }
 
-  return clientId;
+    return clientId;
 }
 
 export async function getAuthorizationUrl() {
-  const redirectUri = process.env.WORKOS_REDIRECT_URI;
+    const redirectUri = process.env.WORKOS_REDIRECT_URI;
 
-  if (!redirectUri) {
-    throw new Error("WORKOS_REDIRECT_URI is not set");
-  }
+    if (!redirectUri) {
+        throw new Error("WORKOS_REDIRECT_URI is not set");
+    }
 
-  const authorizationUrl = workos.userManagement.getAuthorizationUrl({
-    provider: "authkit",
-    clientId: getClientId(),
-    // The endpoint that WorkOS will redirect to after a user authenticates
-    redirectUri,
-  });
+    const authorizationUrl = workos.userManagement.getAuthorizationUrl({
+        provider: "authkit",
+        clientId: getClientId(),
+        // The endpoint that WorkOS will redirect to after a user authenticates
+        redirectUri: "http://localhost:3000/callback",
+    });
 
-  return authorizationUrl;
+    return authorizationUrl;
 }
 
 export function getJwtSecretKey() {
-  const secret = process.env.JWT_SECRET_KEY;
+    const secret = process.env.JWT_SECRET_KEY;
 
-  if (!secret) {
-    throw new Error("JWT_SECRET_KEY is not set");
-  }
+    if (!secret) {
+        throw new Error("JWT_SECRET_KEY is not set");
+    }
 
-  return new Uint8Array(Buffer.from(secret, "base64"));
+    return new Uint8Array(Buffer.from(secret, "base64"));
 }
 
 export async function verifyJwtToken(token: string) {
-  try {
-    const { payload } = await jwtVerify(token, getJwtSecretKey());
+    try {
+        const { payload } = await jwtVerify(token, getJwtSecretKey());
 
-    return payload;
-  } catch (error) {
-    return null;
-  }
+        return payload;
+    } catch (error) {
+        return null;
+    }
 }
 
 export async function getUser(): Promise<{
-  isAuthenticated: boolean;
-  user?: User | null;
+    isAuthenticated: boolean;
+    user?: User | null;
 }> {
-  const token = cookies().get("token")?.value;
-  const verifiedToken = token && (await verifyJwtToken(token));
+    const token = cookies().get("token")?.value;
+    const verifiedToken = token && (await verifyJwtToken(token));
 
-  if (verifiedToken) {
-    return {
-      isAuthenticated: true,
-      user: verifiedToken.user as User | null,
-    };
-  }
+    if (verifiedToken) {
+        return {
+            isAuthenticated: true,
+            user: verifiedToken.user as User | null,
+        };
+    }
 
-  return { isAuthenticated: false };
+    return { isAuthenticated: false };
 }
 
 export async function logOut() {
-  cookies().delete("token");
-  redirect("/");
+    cookies().delete("token");
+    redirect("/");
 }

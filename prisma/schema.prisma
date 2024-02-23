@@ -11,10 +11,13 @@ datasource db {
 }
 
 model User {
-  id           String @id @default(uuid())
-  org          Org    @relation(fields: [orgId], references: [id])
+  id           String  @id @default(uuid())
+  org          Org     @relation(fields: [orgId], references: [id])
   orgId        String
   name         String
+  email        String  @unique
+  pfp          Bytes?
+  admin        Boolean @default(false)
   passwordHash String
 }
 
