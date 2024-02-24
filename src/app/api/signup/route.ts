@@ -2,7 +2,8 @@ import { getJwtSecretKey, pepper } from "@/auth";
 import { prisma } from "@/server/prisma";
 import { hash } from "argon2";
 import { SignJWT } from "jose";
-import { TypedNextResponse, route, routeOperation } from "next-rest-framework";
+import { route, routeOperation } from "next-rest-framework";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 export const { POST } = route({
@@ -31,7 +32,7 @@ export const { POST } = route({
             const { name, email, password } = await req.json();
 
             if (await prisma.user.findUnique({ where: { email } })) {
-                return await TypedNextResponse.json(
+                return NextResponse.json(
                     "A user with this email already exists",
                     { status: 409 }
                 );
@@ -56,7 +57,7 @@ export const { POST } = route({
                 },
             });
 
-            const response = await TypedNextResponse.json(null, {
+            const response = NextResponse.json(null, {
                 status: 200,
             });
 

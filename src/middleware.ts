@@ -9,15 +9,24 @@ export async function middleware(request: NextRequest) {
 
     // Redirect unauthenticated users to the AuthKit flow
     if (!hasVerifiedToken) {
-        const authorizationUrl = await getAuthorizationUrl(request.url);
-        const response = NextResponse.redirect(authorizationUrl);
+        const authorizationUrl = getAuthorizationUrl(request.url);
+        const response = NextResponse.redirect(authorizationUrl, {
+            status: 403,
+        });
+        // const response = NextResponse.json(null, {
+        //     status: 403,
+        // });
 
         response.cookies.delete("token");
 
         return response;
     }
 
-    return NextResponse.next();
+    const headers = new Headers(request.headers);
+
+    headers.set("x-uer", JSON.stringify(hasVerifiedToken))
+
+    return;
 }
 
 // Match against the account page

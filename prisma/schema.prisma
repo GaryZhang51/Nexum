@@ -5,6 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider = "npx zod-prisma-types"
+}
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -37,6 +41,7 @@ model Partner {
   name        String
   img         Bytes
   description String
+  tags        String @default("")
   notes       String?
   email       String?
   location    String?
