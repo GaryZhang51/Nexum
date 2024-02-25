@@ -4,7 +4,7 @@ import { Button, Flex } from "@radix-ui/themes";
 
 export async function AuthButton({ large }: { large?: boolean }) {
     const { isAuthenticated } = await getUser();
-    const authorizationUrl = await getAuthorizationUrl(usePathname());
+    const authorizationUrl = await getAuthorizationUrl("/");
 
     if (isAuthenticated) {
         return (

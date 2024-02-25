@@ -1,4 +1,5 @@
 import { getJwtSecretKey, pepper } from "@/auth";
+import { decryptFields, encryptFields } from "@/server/encryption";
 import { prisma } from "@/server/prisma";
 import { hash } from "argon2";
 import { SignJWT } from "jose";
@@ -31,34 +32,35 @@ export const { POST } = route({
         .handler(async (req) => {
             const { name, email, password } = await req.json();
 
-            if (await prisma.user.findUnique({ where: { email } })) {
+            if (
+                (await prisma.user.findMany()).filter(
+                    (u) => decryptFields({ e: u.email }).e === email
+                ).length
+            ) {
                 return NextResponse.json(
                     "A user with this email already exists",
                     { status: 409 }
                 );
             }
 
-            const org = await prisma.org.create({
-                data: {
-                    name: `${name}'s organization`,
-                },
-            });
-
             const passwordHash = await hash(password, {
                 secret: pepper,
             });
 
             const user = await prisma.user.create({
-                data: {
-                    name,
-                    email,
-                    passwordHash,
-                    org: {
-                        create: {
-                            name: `${name}'s organization`,
+                data: encryptFields(
+                    {
+                        name,
+                        email,
+                        passwordHash,
+                        org: {
+                            create: encryptFields({
+                                name: `${name}'s organization`,
+                            }),
                         },
                     },
-                },
+                    ["passwordHash", "org"]
+                ),
             });
 
             const response = NextResponse.json(null, {

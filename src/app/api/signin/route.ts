@@ -1,4 +1,5 @@
 import { getJwtSecretKey, pepper } from "@/auth";
+import { decryptFields, encryptFields } from "@/server/encryption";
 import { prisma } from "@/server/prisma";
 import { verify } from "argon2";
 import { SignJWT } from "jose";
@@ -29,7 +30,9 @@ export const { POST } = route({
         ])
         .handler(async (req) => {
             const { email, password } = await req.json();
-            const user = await prisma.user.findUnique({ where: { email } });
+            let user = (await prisma.user.findMany()).filter(
+                (u) => decryptFields({ e: u.email }).e === email
+            )[0];
 
             if (
                 user === null ||
@@ -37,6 +40,9 @@ export const { POST } = route({
             ) {
                 return NextResponse.json(null, { status: 401 });
             }
+
+            user = decryptFields(user, ["id", "orgId", "passwordHash"]);
+            console.log(user);
 
             const response = NextResponse.json(null, {
                 status: 200,

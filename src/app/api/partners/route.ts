@@ -6,6 +6,7 @@ import { prisma } from "@/server/prisma";
 import { Prisma } from "@prisma/client";
 import Fuse from "fuse.js";
 import { NextRequest, NextResponse } from "next/server";
+import { decryptFields, encryptFields } from "@/server/encryption";
 
 export const { GET, POST } = route({
     getPartners: routeOperation({
@@ -37,7 +38,7 @@ export const { GET, POST } = route({
             const user = res as Prisma.UserUncheckedCreateInput;
             const { search } = await req.json();
 
-            const partners = await prisma.org.findUnique({
+            const searchResult = await prisma.org.findUnique({
                 where: {
                     id: user.orgId,
                 },
@@ -46,10 +47,15 @@ export const { GET, POST } = route({
                 },
             });
 
-            if (partners === null) {
+            if (searchResult === null) {
                 return NextResponse.json([], { status: 200 });
             }
-            const filtered = new Fuse(partners.partners, {
+
+            const partners = searchResult.partners.map((x) =>
+                decryptFields(x, ["id", "orgId"])
+            );
+
+            const filtered = new Fuse(partners, {
                 keys: [
                     { name: "name", weight: 4 },
                     { name: "tags", weight: 2 },
@@ -97,7 +103,9 @@ export const { GET, POST } = route({
             console.log(user);
 
             const result = await prisma.partner.create({
-                data: { ...partner, orgId: user.orgId },
+                data: encryptFields({ ...partner, orgId: user.orgId }, [
+                    "orgId",
+                ]),
             });
 
             return NextResponse.json(result, { status: 200 });
