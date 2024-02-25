@@ -1,9 +1,9 @@
 import { AuthButton } from "@/components/AuthButton";
 import Sidebar from "@/components/Sidebar";
-import Tiles from "@/components/Tiles";
+import Tiles from "@/components/Tile";
 
 export default function Home() {
-    const isSignedIn = false
+    const isSignedIn = false;
     return (
         <main className="flex min-h-screen flex-row">
             <Sidebar />

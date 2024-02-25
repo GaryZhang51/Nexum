@@ -39,7 +39,7 @@ model Partner {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   name        String
-  img         Bytes?
+  img         String?
   description String
   tags        String
   notes       String?
