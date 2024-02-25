@@ -17,13 +17,12 @@ const Signup = () => {
                         new FormData(e.currentTarget)
                     );
 
-                    fetch(window.location.origin + "/api/signup", {
+                    fetch(window.location.origin + "/api/signin", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            name: data.name,
                             email: data.email,
                             password: data.password,
                         }),
@@ -34,24 +33,6 @@ const Signup = () => {
                         .catch((errors) => setServerErrors(errors.message));
                 }}
             >
-                <Form.Field name="name">
-                    <div className="flex justify-between w-full">
-                        <Form.Label className="font-bold text-xl">
-                            Name
-                        </Form.Label>
-                        <Form.Message match="valueMissing">
-                            Please enter your name.
-                        </Form.Message>
-                    </div>
-                    <Form.Control asChild>
-                        <input
-                            className="px-4 py-2 w-full mt-1"
-                            type="text"
-                            required
-                            placeholder="Enter name."
-                        />
-                    </Form.Control>
-                </Form.Field>
                 <Form.Field name="email" serverInvalid={serverErrors != ""}>
                     <div className="flex justify-between w-full">
                         <Form.Label className="font-bold text-xl">
@@ -84,22 +65,18 @@ const Signup = () => {
                         <Form.Message match="valueMissing">
                             Please enter a password.
                         </Form.Message>
-                        <Form.Message match="tooShort">
-                            Your password must be longer than 8 characters.
-                        </Form.Message>
                     </div>
                     <Form.Control asChild>
                         <input
                             className="px-4 py-2 w-full mt-1"
                             type="password"
                             required
-                            minLength={8}
                             placeholder="Enter password."
                         />
                     </Form.Control>
                 </Form.Field>
                 <Form.Submit asChild>
-                    <Button className="!text-lg !p-5">Sign up</Button>
+                    <Button className="!text-lg !p-5">Sign in</Button>
                 </Form.Submit>
             </Form.Root>
         </main>
