@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
 
     // Redirect unauthenticated users to the AuthKit flow
     if (!hasVerifiedToken) {
-        const authorizationUrl = await getAuthorizationUrl(request.url);
+        const authorizationUrl = getAuthorizationUrl(request.url);
         const response = NextResponse.redirect(authorizationUrl);
 
         response.cookies.delete("token");

@@ -18,7 +18,8 @@ export function getClientId() {
 
 export function getAuthorizationUrl(callback?: string | null) {
     const authorizationUrl =
-        "/callback" /* temp */ + (callback ? "?callback=" + callback : "");
+        "/signup" /* temp */ +
+        (callback ? "?callback=" + encodeURI(callback) : "");
 
     return authorizationUrl;
 }
