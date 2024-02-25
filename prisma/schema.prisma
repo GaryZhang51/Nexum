@@ -9,3 +9,37 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id           String  @id @default(uuid())
+  org          Org     @relation(fields: [orgId], references: [id])
+  orgId        String
+  name         String
+  email        String  @unique
+  pfp          Bytes?
+  admin        Boolean @default(false)
+  passwordHash String
+}
+
+model Org {
+  id       String    @id @default(uuid())
+  users    User[]
+  partners Partner[]
+  name     String
+}
+
+model Partner {
+  id          String   @id @default(uuid())
+  org         Org      @relation(fields: [orgId], references: [id])
+  orgId       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  img         Bytes
+  description String
+  notes       String?
+  email       String?
+  location    String?
+  website     String?
+  phone       String?
+}
