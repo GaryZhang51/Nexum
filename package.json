@@ -15,6 +15,7 @@
     "@trpc/client": "^11.0.0-next-beta.264",
     "@trpc/server": "^11.0.0-next-beta.264",
     "argon2": "^0.31.2",
+    "fuse.js": "^7.0.0",
     "jose": "^5.2.1",
     "next": "14.1.0",
     "next-rest-framework": "^5.1.3",
@@ -34,6 +35,7 @@
     "prisma": "^5.9.1",
     "sass": "^1.70.0",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "zod-prisma-types": "^3.1.6"
   }
 }

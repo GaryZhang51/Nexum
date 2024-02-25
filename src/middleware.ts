@@ -6,6 +6,7 @@ export async function middleware(request: NextRequest) {
     const { value: token } = cookies.get("token") ?? { value: null };
 
     const hasVerifiedToken = token && (await verifyJwtToken(token));
+    // console.log(token, hasVerifiedToken, cookies);
 
     // Redirect unauthenticated users to the AuthKit flow
     if (!hasVerifiedToken) {
@@ -17,7 +18,7 @@ export async function middleware(request: NextRequest) {
         return response;
     }
 
-    return NextResponse.next();
+    return hasVerifiedToken;
 }
 
 // Match against the account page

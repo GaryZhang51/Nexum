@@ -1,8 +1,10 @@
 import { getJwtSecretKey, pepper } from "@/auth";
+import { decryptFields, encryptFields } from "@/server/encryption";
 import { prisma } from "@/server/prisma";
 import { hash } from "argon2";
 import { SignJWT } from "jose";
-import { TypedNextResponse, route, routeOperation } from "next-rest-framework";
+import { route, routeOperation } from "next-rest-framework";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 export const { POST } = route({
@@ -30,33 +32,38 @@ export const { POST } = route({
         .handler(async (req) => {
             const { name, email, password } = await req.json();
 
-            if (await prisma.user.findUnique({ where: { email } })) {
-                return await TypedNextResponse.json(
+            if (
+                (await prisma.user.findMany()).filter(
+                    (u) => decryptFields({ e: u.email }).e === email
+                ).length
+            ) {
+                return NextResponse.json(
                     "A user with this email already exists",
                     { status: 409 }
                 );
             }
-
-            const org = await prisma.org.create({
-                data: {
-                    name: `${name}'s organization`,
-                },
-            });
 
             const passwordHash = await hash(password, {
                 secret: pepper,
             });
 
             const user = await prisma.user.create({
-                data: {
-                    name,
-                    email,
-                    passwordHash,
-                    orgId: org.id,
-                },
+                data: encryptFields(
+                    {
+                        name,
+                        email,
+                        passwordHash,
+                        org: {
+                            create: encryptFields({
+                                name: `${name}'s organization`,
+                            }),
+                        },
+                    },
+                    ["passwordHash", "org"]
+                ),
             });
 
-            const response = await TypedNextResponse.json(null, {
+            const response = NextResponse.json(null, {
                 status: 200,
             });
 
@@ -73,7 +80,7 @@ export const { POST } = route({
                 value: token,
                 path: "/",
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV != "development",
                 sameSite: "lax",
             });
 
