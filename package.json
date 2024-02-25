@@ -14,8 +14,6 @@
     "@radix-ui/themes": "^2.0.3",
     "@trpc/client": "^11.0.0-next-beta.264",
     "@trpc/server": "^11.0.0-next-beta.264",
-    "@workos-inc/node": "^5.2.0",
-    "aes-encryption": "^1.0.4",
     "argon2": "^0.31.2",
     "fuse.js": "^7.0.0",
     "jose": "^5.2.1",

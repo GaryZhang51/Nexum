@@ -1,4 +1,3 @@
-import { usePathname } from "next/navigation";
 import { logOut, getAuthorizationUrl, getUser } from "../auth";
 import { Button, Flex } from "@radix-ui/themes";
 
