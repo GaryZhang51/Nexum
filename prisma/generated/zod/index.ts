@@ -62,7 +62,7 @@ export const PartnerSchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   name: z.string(),
-  img: z.instanceof(Buffer),
+  img: z.instanceof(Buffer).nullable(),
   description: z.string(),
   tags: z.string(),
   notes: z.string().nullable(),
@@ -298,7 +298,7 @@ export const PartnerWhereInputSchema: z.ZodType<Prisma.PartnerWhereInput> = z.ob
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  img: z.union([ z.lazy(() => BytesFilterSchema),z.instanceof(Buffer) ]).optional(),
+  img: z.union([ z.lazy(() => BytesNullableFilterSchema),z.instanceof(Buffer) ]).optional().nullable(),
   description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   tags: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   notes: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
@@ -315,7 +315,7 @@ export const PartnerOrderByWithRelationInputSchema: z.ZodType<Prisma.PartnerOrde
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  img: z.lazy(() => SortOrderSchema).optional(),
+  img: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   tags: z.lazy(() => SortOrderSchema).optional(),
   notes: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
@@ -338,7 +338,7 @@ export const PartnerWhereUniqueInputSchema: z.ZodType<Prisma.PartnerWhereUniqueI
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  img: z.union([ z.lazy(() => BytesFilterSchema),z.instanceof(Buffer) ]).optional(),
+  img: z.union([ z.lazy(() => BytesNullableFilterSchema),z.instanceof(Buffer) ]).optional().nullable(),
   description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   tags: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   notes: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
@@ -355,7 +355,7 @@ export const PartnerOrderByWithAggregationInputSchema: z.ZodType<Prisma.PartnerO
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  img: z.lazy(() => SortOrderSchema).optional(),
+  img: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   tags: z.lazy(() => SortOrderSchema).optional(),
   notes: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
@@ -377,7 +377,7 @@ export const PartnerScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Partn
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  img: z.union([ z.lazy(() => BytesWithAggregatesFilterSchema),z.instanceof(Buffer) ]).optional(),
+  img: z.union([ z.lazy(() => BytesNullableWithAggregatesFilterSchema),z.instanceof(Buffer) ]).optional().nullable(),
   description: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   tags: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   notes: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
@@ -489,9 +489,9 @@ export const PartnerCreateInputSchema: z.ZodType<Prisma.PartnerCreateInput> = z.
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   name: z.string(),
-  img: z.instanceof(Buffer),
+  img: z.instanceof(Buffer).optional().nullable(),
   description: z.string(),
-  tags: z.string().optional(),
+  tags: z.string(),
   notes: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
@@ -506,9 +506,9 @@ export const PartnerUncheckedCreateInputSchema: z.ZodType<Prisma.PartnerUnchecke
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   name: z.string(),
-  img: z.instanceof(Buffer),
+  img: z.instanceof(Buffer).optional().nullable(),
   description: z.string(),
-  tags: z.string().optional(),
+  tags: z.string(),
   notes: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
@@ -521,7 +521,7 @@ export const PartnerUpdateInputSchema: z.ZodType<Prisma.PartnerUpdateInput> = z.
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  img: z.union([ z.instanceof(Buffer),z.lazy(() => BytesFieldUpdateOperationsInputSchema) ]).optional(),
+  img: z.union([ z.instanceof(Buffer),z.lazy(() => NullableBytesFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   tags: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -538,7 +538,7 @@ export const PartnerUncheckedUpdateInputSchema: z.ZodType<Prisma.PartnerUnchecke
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  img: z.union([ z.instanceof(Buffer),z.lazy(() => BytesFieldUpdateOperationsInputSchema) ]).optional(),
+  img: z.union([ z.instanceof(Buffer),z.lazy(() => NullableBytesFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   tags: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -553,7 +553,7 @@ export const PartnerUpdateManyMutationInputSchema: z.ZodType<Prisma.PartnerUpdat
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  img: z.union([ z.instanceof(Buffer),z.lazy(() => BytesFieldUpdateOperationsInputSchema) ]).optional(),
+  img: z.union([ z.instanceof(Buffer),z.lazy(() => NullableBytesFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   tags: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -569,7 +569,7 @@ export const PartnerUncheckedUpdateManyInputSchema: z.ZodType<Prisma.PartnerUnch
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  img: z.union([ z.instanceof(Buffer),z.lazy(() => BytesFieldUpdateOperationsInputSchema) ]).optional(),
+  img: z.union([ z.instanceof(Buffer),z.lazy(() => NullableBytesFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   tags: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -726,13 +726,6 @@ export const DateTimeFilterSchema: z.ZodType<Prisma.DateTimeFilter> = z.object({
   not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
 }).strict();
 
-export const BytesFilterSchema: z.ZodType<Prisma.BytesFilter> = z.object({
-  equals: z.instanceof(Buffer).optional(),
-  in: z.instanceof(Buffer).array().optional(),
-  notIn: z.instanceof(Buffer).array().optional(),
-  not: z.union([ z.instanceof(Buffer),z.lazy(() => NestedBytesFilterSchema) ]).optional(),
-}).strict();
-
 export const StringNullableFilterSchema: z.ZodType<Prisma.StringNullableFilter> = z.object({
   equals: z.string().optional().nullable(),
   in: z.string().array().optional().nullable(),
@@ -807,16 +800,6 @@ export const DateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.DateTimeWithAg
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedDateTimeFilterSchema).optional(),
   _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
-}).strict();
-
-export const BytesWithAggregatesFilterSchema: z.ZodType<Prisma.BytesWithAggregatesFilter> = z.object({
-  equals: z.instanceof(Buffer).optional(),
-  in: z.instanceof(Buffer).array().optional(),
-  notIn: z.instanceof(Buffer).array().optional(),
-  not: z.union([ z.instanceof(Buffer),z.lazy(() => NestedBytesWithAggregatesFilterSchema) ]).optional(),
-  _count: z.lazy(() => NestedIntFilterSchema).optional(),
-  _min: z.lazy(() => NestedBytesFilterSchema).optional(),
-  _max: z.lazy(() => NestedBytesFilterSchema).optional()
 }).strict();
 
 export const StringNullableWithAggregatesFilterSchema: z.ZodType<Prisma.StringNullableWithAggregatesFilter> = z.object({
@@ -948,10 +931,6 @@ export const DateTimeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.DateTime
   set: z.coerce.date().optional()
 }).strict();
 
-export const BytesFieldUpdateOperationsInputSchema: z.ZodType<Prisma.BytesFieldUpdateOperationsInput> = z.object({
-  set: z.instanceof(Buffer).optional()
-}).strict();
-
 export const NullableStringFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableStringFieldUpdateOperationsInput> = z.object({
   set: z.string().optional().nullable()
 }).strict();
@@ -1058,13 +1037,6 @@ export const NestedDateTimeFilterSchema: z.ZodType<Prisma.NestedDateTimeFilter> 
   not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
 }).strict();
 
-export const NestedBytesFilterSchema: z.ZodType<Prisma.NestedBytesFilter> = z.object({
-  equals: z.instanceof(Buffer).optional(),
-  in: z.instanceof(Buffer).array().optional(),
-  notIn: z.instanceof(Buffer).array().optional(),
-  not: z.union([ z.instanceof(Buffer),z.lazy(() => NestedBytesFilterSchema) ]).optional(),
-}).strict();
-
 export const NestedStringNullableFilterSchema: z.ZodType<Prisma.NestedStringNullableFilter> = z.object({
   equals: z.string().optional().nullable(),
   in: z.string().array().optional().nullable(),
@@ -1091,16 +1063,6 @@ export const NestedDateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.NestedDa
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedDateTimeFilterSchema).optional(),
   _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
-}).strict();
-
-export const NestedBytesWithAggregatesFilterSchema: z.ZodType<Prisma.NestedBytesWithAggregatesFilter> = z.object({
-  equals: z.instanceof(Buffer).optional(),
-  in: z.instanceof(Buffer).array().optional(),
-  notIn: z.instanceof(Buffer).array().optional(),
-  not: z.union([ z.instanceof(Buffer),z.lazy(() => NestedBytesWithAggregatesFilterSchema) ]).optional(),
-  _count: z.lazy(() => NestedIntFilterSchema).optional(),
-  _min: z.lazy(() => NestedBytesFilterSchema).optional(),
-  _max: z.lazy(() => NestedBytesFilterSchema).optional()
 }).strict();
 
 export const NestedStringNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedStringNullableWithAggregatesFilter> = z.object({
@@ -1188,9 +1150,9 @@ export const PartnerCreateWithoutOrgInputSchema: z.ZodType<Prisma.PartnerCreateW
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   name: z.string(),
-  img: z.instanceof(Buffer),
+  img: z.instanceof(Buffer).optional().nullable(),
   description: z.string(),
-  tags: z.string().optional(),
+  tags: z.string(),
   notes: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
@@ -1203,9 +1165,9 @@ export const PartnerUncheckedCreateWithoutOrgInputSchema: z.ZodType<Prisma.Partn
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   name: z.string(),
-  img: z.instanceof(Buffer),
+  img: z.instanceof(Buffer).optional().nullable(),
   description: z.string(),
-  tags: z.string().optional(),
+  tags: z.string(),
   notes: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
@@ -1272,7 +1234,7 @@ export const PartnerScalarWhereInputSchema: z.ZodType<Prisma.PartnerScalarWhereI
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  img: z.union([ z.lazy(() => BytesFilterSchema),z.instanceof(Buffer) ]).optional(),
+  img: z.union([ z.lazy(() => BytesNullableFilterSchema),z.instanceof(Buffer) ]).optional().nullable(),
   description: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   tags: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   notes: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
@@ -1354,7 +1316,7 @@ export const PartnerUpdateWithoutOrgInputSchema: z.ZodType<Prisma.PartnerUpdateW
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  img: z.union([ z.instanceof(Buffer),z.lazy(() => BytesFieldUpdateOperationsInputSchema) ]).optional(),
+  img: z.union([ z.instanceof(Buffer),z.lazy(() => NullableBytesFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   tags: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1369,7 +1331,7 @@ export const PartnerUncheckedUpdateWithoutOrgInputSchema: z.ZodType<Prisma.Partn
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  img: z.union([ z.instanceof(Buffer),z.lazy(() => BytesFieldUpdateOperationsInputSchema) ]).optional(),
+  img: z.union([ z.instanceof(Buffer),z.lazy(() => NullableBytesFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   tags: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
@@ -1384,7 +1346,7 @@ export const PartnerUncheckedUpdateManyWithoutOrgInputSchema: z.ZodType<Prisma.P
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  img: z.union([ z.instanceof(Buffer),z.lazy(() => BytesFieldUpdateOperationsInputSchema) ]).optional(),
+  img: z.union([ z.instanceof(Buffer),z.lazy(() => NullableBytesFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   tags: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),

@@ -53,7 +53,11 @@ export const { POST } = route({
                     name,
                     email,
                     passwordHash,
-                    orgId: org.id,
+                    org: {
+                        create: {
+                            name: `${name}'s organization`,
+                        },
+                    },
                 },
             });
 
@@ -74,7 +78,7 @@ export const { POST } = route({
                 value: token,
                 path: "/",
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV != "development",
                 sameSite: "lax",
             });
 

@@ -55,7 +55,7 @@ export const { POST } = route({
                 value: token,
                 path: "/",
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV != "development",
                 sameSite: "lax",
             });
 

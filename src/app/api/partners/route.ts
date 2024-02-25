@@ -5,7 +5,7 @@ import { middleware } from "@/middleware";
 import { prisma } from "@/server/prisma";
 import { Prisma } from "@prisma/client";
 import Fuse from "fuse.js";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const { GET, POST } = route({
     getPartners: routeOperation({
@@ -21,7 +21,7 @@ export const { GET, POST } = route({
             {
                 status: 403,
                 contentType: "application/json",
-                schema: z.unknown(),
+                schema: z.null(),
             },
             {
                 status: 200,
@@ -29,15 +29,17 @@ export const { GET, POST } = route({
                 schema: z.array(PartnerSchema),
             },
         ])
-        .middleware(middleware)
+        // .middleware(middleware)
         .handler(async (req) => {
-            const user: Prisma.UserCreateInput = JSON.parse(
-                req.headers.get("x-user") ?? ""
-            );
+            const res = await middleware(req as NextRequest);
+            if (res instanceof NextResponse) return res;
+
+            const user = res as Prisma.UserUncheckedCreateInput;
+            const { search } = await req.json();
 
             const partners = await prisma.org.findUnique({
                 where: {
-                    id: user.org.connect?.id,
+                    id: user.orgId,
                 },
                 select: {
                     partners: true,
@@ -53,7 +55,9 @@ export const { GET, POST } = route({
                     { name: "tags", weight: 2 },
                     "description",
                 ],
-            });
+            })
+                .search(search)
+                .map((x) => x.item);
 
             return NextResponse.json(filtered, { status: 200 });
         }),
@@ -63,17 +67,39 @@ export const { GET, POST } = route({
     })
         .input({
             contentType: "application/json",
-            body: PartnerSchema.omit({ orgId: true }),
+            body: PartnerSchema.omit({
+                id: true,
+                orgId: true,
+                img: true,
+                createdAt: true,
+                updatedAt: true,
+            }),
         })
-        .middleware(middleware)
+        .outputs([
+            {
+                status: 403,
+                contentType: "application/json",
+                schema: z.null(),
+            },
+            {
+                status: 200,
+                contentType: "application/json",
+                schema: PartnerSchema,
+            },
+        ])
+        // .middleware(middleware)
         .handler(async (req) => {
-            const user: Prisma.UserCreateInput = JSON.parse(
-                req.headers.get("x-user") ?? ""
-            );
-            const partner = await req.json();
+            const res = await middleware(req as NextRequest);
+            if (res instanceof NextResponse) return res;
 
-            await prisma.partner.create({
-                data: { ...partner, orgId: user.org.connect?.id ?? "" },
+            const user = res.user as Prisma.UserUncheckedCreateInput;
+            const partner = await req.json();
+            console.log(user);
+
+            const result = await prisma.partner.create({
+                data: { ...partner, orgId: user.orgId },
             });
+
+            return NextResponse.json(result, { status: 200 });
         }),
 });
